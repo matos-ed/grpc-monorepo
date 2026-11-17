@@ -1,17 +1,9 @@
-import {
-  callUnary,
-  createClient,
-  isServiceError,
-  logger,
-  orders,
-  readString,
-  status,
-  type Order,
-} from '@grpc-monorepo/grpc-core';
+import { OrderService, type Order } from '@grpc-monorepo/contracts-orders';
+import { callUnary, createClient, isServiceError, logger, readString, status } from '@grpc-monorepo/grpc-core';
 
 const address = readString('ORDERS_GRPC_ADDR', 'localhost:50052');
 const userId = process.argv.slice(2).find((arg) => arg !== '--') ?? 'u-1';
-const client = createClient(orders.OrderService, address);
+const client = createClient(OrderService, address);
 
 try {
   const created = await callUnary<Order>((options, callback) =>

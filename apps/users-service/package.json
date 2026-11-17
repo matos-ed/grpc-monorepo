@@ -9,6 +9,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@grpc-monorepo/contracts-users": "workspace:*",
     "@grpc-monorepo/grpc-core": "workspace:*"
   }
 }

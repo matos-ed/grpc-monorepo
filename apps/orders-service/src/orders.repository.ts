@@ -1,4 +1,4 @@
-import type { Order } from '@grpc-monorepo/grpc-core';
+import type { Order } from '@grpc-monorepo/contracts-orders';
 
 export interface IOrderRepository {
   save(order: Order): Promise<void>;

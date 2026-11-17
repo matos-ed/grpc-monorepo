@@ -1,4 +1,4 @@
-// Original file: protos/users/v1/users.proto
+// Original file: proto/users/v1/users.proto
 
 
 export interface GetUserRequestInput {

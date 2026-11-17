@@ -23,15 +23,48 @@ importers:
 
   apps/orders-service:
     dependencies:
+      '@grpc-monorepo/contracts-orders':
+        specifier: workspace:*
+        version: link:../../packages/contracts-orders
+      '@grpc-monorepo/contracts-users':
+        specifier: workspace:*
+        version: link:../../packages/contracts-users
       '@grpc-monorepo/grpc-core':
         specifier: workspace:*
         version: link:../../packages/grpc-core
 
   apps/users-service:
     dependencies:
+      '@grpc-monorepo/contracts-users':
+        specifier: workspace:*
+        version: link:../../packages/contracts-users
       '@grpc-monorepo/grpc-core':
         specifier: workspace:*
         version: link:../../packages/grpc-core
+
+  packages/contracts-orders:
+    dependencies:
+      '@grpc-monorepo/grpc-core':
+        specifier: workspace:*
+        version: link:../grpc-core
+      '@grpc/grpc-js':
+        specifier: ^1.14.7
+        version: 1.14.7
+      '@grpc/proto-loader':
+        specifier: ^0.8.1
+        version: 0.8.1
+
+  packages/contracts-users:
+    dependencies:
+      '@grpc-monorepo/grpc-core':
+        specifier: workspace:*
+        version: link:../grpc-core
+      '@grpc/grpc-js':
+        specifier: ^1.14.7
+        version: 1.14.7
+      '@grpc/proto-loader':
+        specifier: ^0.8.1
+        version: 0.8.1
 
   packages/grpc-core:
     dependencies:

@@ -1,4 +1,4 @@
-// Original file: protos/orders/v1/orders.proto
+// Original file: proto/orders/v1/orders.proto
 
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'

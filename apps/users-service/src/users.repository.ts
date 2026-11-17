@@ -1,4 +1,4 @@
-import type { User } from '@grpc-monorepo/grpc-core';
+import type { User } from '@grpc-monorepo/contracts-users';
 
 export interface IUserRepository {
   findById(id: string): Promise<User | null>;

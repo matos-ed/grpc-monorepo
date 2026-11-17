@@ -6,8 +6,10 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "bin": {
+    "grpc-gen": "./bin/grpc-gen.mjs"
+  },
   "scripts": {
-    "gen:types": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=src/generated --longs=String --enums=String --defaults --oneofs --inputTemplate=%sInput --outputTemplate=%s protos/users/v1/users.proto protos/orders/v1/orders.proto",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {

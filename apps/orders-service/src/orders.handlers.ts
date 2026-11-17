@@ -1,4 +1,5 @@
-import { invalidArgument, notFound, unary, type Order, type OrderServiceHandlers } from '@grpc-monorepo/grpc-core';
+import type { Order, OrderServiceHandlers } from '@grpc-monorepo/contracts-orders';
+import { invalidArgument, notFound, unary } from '@grpc-monorepo/grpc-core';
 import { randomUUID } from 'node:crypto';
 import type { IOrderRepository } from './orders.repository';
 import type { IUsersGateway } from './users.client';

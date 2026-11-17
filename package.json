@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "pnpm -r --parallel --filter \"./apps/*\" dev",
-    "gen": "pnpm --filter @grpc-monorepo/grpc-core gen:types",
+    "gen": "pnpm -r gen",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
     "demo": "pnpm --filter @grpc-monorepo/orders-service demo"

@@ -1,12 +1,23 @@
 # grpc-monorepo
 
-Monorepo pnpm com dois serviços Node.js (TypeScript) que se comunicam via gRPC e uma lib compartilhada com o setup base.
+Monorepo pnpm com dois serviços Node.js (TypeScript) que se comunicam via gRPC, uma lib com o setup base do gRPC e um pacote de contrato por serviço.
 
 ```
-packages/grpc-core      # lib: contratos .proto, tipos gerados, server/client, erros, logger
-apps/users-service      # gRPC UserService (porta 50051)
-apps/orders-service     # gRPC OrderService (porta 50052), chama o users-service via gRPC
+packages/grpc-core          # infraestrutura genérica: server, client, erros, logger, loadProto, grpc-gen
+packages/contracts-users    # users.proto + tipos gerados + UserService
+packages/contracts-orders   # orders.proto + tipos gerados + OrderService
+apps/users-service          # implementa UserService (porta 50051)
+apps/orders-service         # implementa OrderService (porta 50052) e chama UserService
 ```
+
+```
+grpc-core ◀── contracts-users ◀── users-service
+    ▲               ▲
+    │               └──────────── orders-service
+    └──────── contracts-orders ◀──┘
+```
+
+O `grpc-core` não conhece nenhum contrato. Cada serviço é dono do seu pacote `contracts-*`, e quem consome declara só os contratos que usa.
 
 ```
 demo ──CreateOrder──▶ orders-service ──GetUser──▶ users-service
@@ -26,7 +37,7 @@ demo ──CreateOrder──▶ orders-service ──GetUser──▶ users-serv
 | `pnpm demo [userId]` | cria e busca um pedido no orders-service (padrão `u-1`; usuários seed: `u-1`, `u-2`, `u-3`) |
 | `pnpm test` | testes unitários e de integração (vitest) |
 | `pnpm typecheck` | `tsc` em todos os pacotes |
-| `pnpm gen` | regenera os tipos TS a partir dos `.proto` |
+| `pnpm gen` | regenera os tipos TS de todos os pacotes de contrato |
 
 ## Variáveis de ambiente
 
@@ -40,15 +51,26 @@ demo ──CreateOrder──▶ orders-service ──GetUser──▶ users-serv
 
 ## A lib `@grpc-monorepo/grpc-core`
 
-- **Contratos** em `protos/<domínio>/v1/*.proto`, carregados em runtime com `@grpc/proto-loader` e expostos já tipados (`users`, `orders`).
+- **`loadProto<T>(url)`**: carrega um `.proto` em runtime com `@grpc/proto-loader` e devolve a árvore de pacotes tipada com o `ProtoGrpcType` gerado.
+- **`grpc-gen <arquivo.proto>...`**: gera os tipos TS em `src/generated`. Concentra as flags do gerador para que elas batam com as opções do `loadProto`.
 - **`startServer`**: registra serviços, faz o bind (porta `0` = porta livre, útil em testes) e cuida do shutdown gracioso em `SIGINT`/`SIGTERM`.
 - **`unary(handler)`**: escreve handlers como `async (request) => response`. `GrpcError` (`notFound`, `invalidArgument`) vira o status correspondente, erros de chamadas gRPC downstream mantêm o código original e qualquer outro erro vira `INTERNAL` (logado, sem vazar a mensagem).
 - **`createClient` + `callUnary`**: client insecure e chamada unária como Promise com deadline padrão de 3s.
 
-### Adicionando um contrato novo
+## Adicionando um contrato novo
 
-1. Crie `packages/grpc-core/protos/<domínio>/v1/<domínio>.proto`.
-2. Inclua o arquivo no script `gen:types` de `packages/grpc-core/package.json` e rode `pnpm gen`.
-3. Exponha o pacote em `src/contracts.ts` e exporte os tipos em `src/index.ts`.
+Exemplo para um serviço `payments`:
 
-As opções do loader em `src/proto.ts` precisam bater com as flags do `gen:types`, senão os tipos gerados não refletem o que chega em runtime.
+1. Crie `packages/contracts-payments/` copiando o `package.json` e o `tsconfig.json` de `contracts-users`, trocando o nome e o caminho no script `gen`.
+2. Escreva `proto/payments/v1/payments.proto` e rode `pnpm gen`.
+3. Em `src/index.ts`, exporte o service carregado e os tipos gerados:
+
+   ```ts
+   export const { PaymentService } = loadProto<ProtoGrpcType>(
+     new URL('../proto/payments/v1/payments.proto', import.meta.url),
+   ).payments.v1;
+   ```
+
+4. Adicione `"@grpc-monorepo/contracts-payments": "workspace:*"` nos apps que implementam ou consomem o serviço e rode `pnpm install`.
+
+O caminho do `.proto` é montado com `import.meta.url` para resolver a partir do pacote de contrato, independente do diretório onde o processo roda.

@@ -1,4 +1,5 @@
-import { invalidArgument, notFound, unary, type UserServiceHandlers } from '@grpc-monorepo/grpc-core';
+import type { UserServiceHandlers } from '@grpc-monorepo/contracts-users';
+import { invalidArgument, notFound, unary } from '@grpc-monorepo/grpc-core';
 import type { IUserRepository } from './users.repository';
 
 export function createUserHandlers(repository: IUserRepository): UserServiceHandlers {

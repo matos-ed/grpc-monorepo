@@ -1,12 +1,5 @@
-import {
-  callUnary,
-  createClient,
-  status,
-  users,
-  type IRunningServer,
-  type User,
-  type UserServiceClient,
-} from '@grpc-monorepo/grpc-core';
+import { UserService, type User, type UserServiceClient } from '@grpc-monorepo/contracts-users';
+import { callUnary, createClient, status, type IRunningServer } from '@grpc-monorepo/grpc-core';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startUsersService } from './app';
 
@@ -16,7 +9,7 @@ describe('users-service', () => {
 
   beforeAll(async () => {
     server = await startUsersService({ port: 0, host: '127.0.0.1', handleSignals: false });
-    client = createClient(users.UserService, `127.0.0.1:${server.port}`);
+    client = createClient(UserService, `127.0.0.1:${server.port}`);
   });
 
   afterAll(async () => {

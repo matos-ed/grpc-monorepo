@@ -1,4 +1,5 @@
-import { startServer, users, type IRunningServer } from '@grpc-monorepo/grpc-core';
+import { UserService } from '@grpc-monorepo/contracts-users';
+import { startServer, type IRunningServer } from '@grpc-monorepo/grpc-core';
 import { createUserHandlers } from './users.handlers';
 import { InMemoryUserRepository, type IUserRepository } from './users.repository';
 
@@ -16,6 +17,6 @@ export function startUsersService(options: IUsersServiceOptions): Promise<IRunni
     port: options.port,
     host: options.host,
     handleSignals: options.handleSignals,
-    services: [{ definition: users.UserService.service, implementation: createUserHandlers(repository) }],
+    services: [{ definition: UserService.service, implementation: createUserHandlers(repository) }],
   });
 }

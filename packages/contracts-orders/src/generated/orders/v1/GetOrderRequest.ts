@@ -1,4 +1,4 @@
-// Original file: protos/orders/v1/orders.proto
+// Original file: proto/orders/v1/orders.proto
 
 
 export interface GetOrderRequestInput {

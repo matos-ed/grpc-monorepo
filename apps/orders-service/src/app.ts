@@ -1,4 +1,5 @@
-import { orders, startServer, type IRunningServer } from '@grpc-monorepo/grpc-core';
+import { OrderService } from '@grpc-monorepo/contracts-orders';
+import { startServer, type IRunningServer } from '@grpc-monorepo/grpc-core';
 import { createOrderHandlers } from './orders.handlers';
 import { InMemoryOrderRepository } from './orders.repository';
 import { GrpcUsersGateway } from './users.client';
@@ -19,7 +20,7 @@ export function startOrdersService(options: IOrdersServiceOptions): Promise<IRun
     port: options.port,
     host: options.host,
     handleSignals: options.handleSignals,
-    services: [{ definition: orders.OrderService.service, implementation }],
+    services: [{ definition: OrderService.service, implementation }],
     onShutdown: () => usersGateway.close(),
   });
 }

@@ -1,16 +1,13 @@
+import { OrderService, type Order, type OrderServiceClient } from '@grpc-monorepo/contracts-orders';
+import { UserService, type UserServiceHandlers } from '@grpc-monorepo/contracts-users';
 import {
   callUnary,
   createClient,
-  orders,
+  notFound,
   startServer,
   status,
   unary,
-  users,
-  notFound,
   type IRunningServer,
-  type Order,
-  type OrderServiceClient,
-  type UserServiceHandlers,
 } from '@grpc-monorepo/grpc-core';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startOrdersService } from './app';
@@ -36,14 +33,14 @@ async function startHarness(usersAddress?: string): Promise<IHarness> {
       port: 0,
       host: '127.0.0.1',
       handleSignals: false,
-      services: [{ definition: users.UserService.service, implementation: fakeUserHandlers }],
+      services: [{ definition: UserService.service, implementation: fakeUserHandlers }],
     });
     servers.push(usersServer);
     address = `127.0.0.1:${usersServer.port}`;
   }
   const ordersServer = await startOrdersService({ port: 0, host: '127.0.0.1', usersAddress: address, handleSignals: false });
   servers.push(ordersServer);
-  return { servers, client: createClient(orders.OrderService, `127.0.0.1:${ordersServer.port}`) };
+  return { servers, client: createClient(OrderService, `127.0.0.1:${ordersServer.port}`) };
 }
 
 async function stopHarness({ servers, client }: IHarness): Promise<void> {
