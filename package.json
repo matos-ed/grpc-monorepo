@@ -1,0 +1,22 @@
+{
+  "name": "grpc-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter \"./apps/*\" dev",
+    "gen": "pnpm --filter @grpc-monorepo/grpc-core gen:types",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "demo": "pnpm --filter @grpc-monorepo/orders-service demo"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
