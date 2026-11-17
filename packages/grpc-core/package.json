@@ -1,0 +1,17 @@
+{
+  "name": "@grpc-monorepo/grpc-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "gen:types": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=src/generated --longs=String --enums=String --defaults --oneofs --inputTemplate=%sInput --outputTemplate=%s protos/users/v1/users.proto protos/orders/v1/orders.proto",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.7",
+    "@grpc/proto-loader": "^0.8.1"
+  }
+}
