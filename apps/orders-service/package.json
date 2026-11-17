@@ -1,0 +1,15 @@
+{
+  "name": "@grpc-monorepo/orders-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "demo": "tsx scripts/demo.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@grpc-monorepo/grpc-core": "workspace:*"
+  }
+}
